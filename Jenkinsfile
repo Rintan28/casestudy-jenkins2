@@ -8,7 +8,11 @@ pipeline {
     stages {
         stage('Clone') {
             steps {
+<<<<<<< HEAD:Jenkinsfile
                 git branch: 'main', url: 'https://github.com/faqi22152ti/demo-app.git'
+=======
+                git 'https://github.com/faqi22152ti/demo-app.git'
+>>>>>>> 3ab2c44 (fix: add serviceAccount config to values.yaml and update Jenkinsfile):jenkinsfile
             }
         }
         stage('Build Docker Image') {
