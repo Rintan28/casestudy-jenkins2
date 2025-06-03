@@ -10,7 +10,24 @@ service:
   port: 5000
   targetPort: 5000
 
+ingress:
+  enabled: true
+  className: ""
+  annotations: {}
+  hosts:
+    - host: demo-app.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+
 resources: {}
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
 
 nodeSelector: {}
 
@@ -22,4 +39,3 @@ serviceAccount:
   create: true
   annotations: {}
   automount: true
-
