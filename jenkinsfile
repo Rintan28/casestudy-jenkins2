@@ -1,0 +1,33 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
+    }
+
+    stages {
+        stage('Clone') {
+            steps {
+                git 'https://github.com/username/demo-app.git'
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t $DOCKERHUB_CREDENTIALS_USR/demo-app:latest .'
+            }
+        }
+        stage('Push to DockerHub') {
+            steps {
+                withDockerRegistry([credentialsId: 'dockerhub-creds', url: '']) {
+                    sh 'docker push $DOCKERHUB_CREDENTIALS_USR/demo-app:latest'
+                }
+            }
+        }
+        stage('Deploy to Minikube') {
+            steps {
+                sh 'helm upgrade --install flask-app ./helm-chart --set image.repository=$DOCKERHUB_CREDENTIALS_USR/demo-app --set image.tag=latest'
+            }
+        }
+    }
+}
+
