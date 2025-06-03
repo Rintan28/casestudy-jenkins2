@@ -8,19 +8,20 @@ pipeline {
     stages {
         stage('Clone') {
             steps {
-                git 'https://github.com/faqi22152ti/demo-app.git'
+                git branch: 'main', url: 'https://github.com/faqi22152ti/demo-app.git'
             }
         }
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t $DOCKERHUB_CREDENTIALS_USR/demo-app:latest .'
+                sh '''
+                echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
+                docker build -t $DOCKERHUB_CREDENTIALS_USR/demo-app:latest .
+                '''
             }
         }
         stage('Push to DockerHub') {
             steps {
-                withDockerRegistry([credentialsId: 'dockerhub-creds', url: '']) {
-                    sh 'docker push $DOCKERHUB_CREDENTIALS_USR/demo-app:latest'
-                }
+                sh 'docker push $DOCKERHUB_CREDENTIALS_USR/demo-app:latest'
             }
         }
         stage('Deploy to Minikube') {
@@ -30,4 +31,3 @@ pipeline {
         }
     }
 }
-
