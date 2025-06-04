@@ -21,7 +21,9 @@ pipeline {
         }
         stage('Push to DockerHub') {
             steps {
-                sh 'docker push $DOCKERHUB_CREDENTIALS_USR/demo-app:latest'
+                retry(3) {
+                    'docker push $DOCKERHUB_CREDENTIALS_USR/demo-app:latest'
+                }
             }
         }
         stage('Deploy to Minikube') {
