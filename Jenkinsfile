@@ -22,7 +22,7 @@ pipeline {
         stage('Push to DockerHub') {
             steps {
                 retry(3) {
-                    'docker push $DOCKERHUB_CREDENTIALS_USR/demo-app:latest'
+                    sh 'docker push $DOCKERHUB_CREDENTIALS_USR/demo-app:latest'
                 }
             }
         }
